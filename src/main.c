@@ -5,6 +5,9 @@ int main()
 {
    int c = add_int_(5, 6);
 
-   printf("\n%d \n", c);
+   printf("%d \n", c);
+
+   
+
    return 0;
 }

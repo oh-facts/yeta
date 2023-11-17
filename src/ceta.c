@@ -12,7 +12,6 @@ void _replace_angled_brackets(char *input);
 char *_replace(const char *string, const char *search, const char *replace);
 void gen(ceta_data *ceta_data);
 
-
 int main()
 {
     generator_run();
@@ -39,10 +38,8 @@ void generator_run()
 
 void gen(ceta_data *ceta_data)
 {
-
-    ceta_data->cf_data = _replace(ceta_data->cf_data, "T", ceta_data->types);
-
     _replace_angled_brackets(ceta_data->cf_data);
+    ceta_data->cf_data = _replace(ceta_data->cf_data, "T", ceta_data->types);
 
     {
         char c;
@@ -63,7 +60,7 @@ void _replace_angled_brackets(char *input)
 {
     for (int i = 0; input[i]; i++)
     {
-        if (input[i] == '<' || input[i] == '>')
+        if ((input[i] == '<' && input[i + 1] == 'T') || input[i] == '>' && input[i - 1] == 'T')
         {
             input[i] = '_';
         }

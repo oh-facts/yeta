@@ -2,3 +2,17 @@ T add<T>(T a,T b)
 {
     return a + b;
 }
+
+typedef struct array<T>
+{
+    T* data;
+    int size;
+    int max_size;
+}array<T>;
+
+void init_array<T>(array<T> *array, int max_size)
+{
+    array->data = malloc(max_size * sizeof(T));
+    array->size = 0;
+    array->max_size = max_size;
+}
