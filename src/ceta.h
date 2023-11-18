@@ -2,18 +2,18 @@
 #include <stdlib.h>
 #include <string.h>
 
-#define CLEAN (1 << 0)
 
-struct ceta_data
+struct mp_state
 {
-    char *gf_name;
+    char *out_path;
 
-    char *cf_name;
-    char *cf_data;
-    int flags;
-    char *types;
+    char *in_path;
+
 };
 
-typedef struct ceta_data ceta_data;
+typedef struct mp_state mp_state;
 
-void generator_run();
+
+void gen(mp_state *ceta_data, char *type);
+
+void file_clean(const char *filepath);

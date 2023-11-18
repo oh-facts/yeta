@@ -12,7 +12,7 @@ add_custom_target(run_generator
     VERBATIM
 )
 
-add_executable(test "src/main.c")
+add_executable(test "sandbox/main.c")
 
 add_dependencies(test run_generator)
 

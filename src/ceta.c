@@ -10,50 +10,31 @@ char *yk_file_reader(const char *filepath);
 void file_writer(const char *filepath, const char *data);
 void _replace_angled_brackets(char *input);
 char *_replace(const char *string, const char *search, const char *replace);
-void gen(ceta_data *ceta_data);
 
 int main()
 {
-    generator_run();
+    file_clean("../src/gen.h");
+    mp_state cd;
+    cd.in_path = "eep.meta";
+    cd.out_path = "../sandbox/gen.h";
+
+    gen(&cd, "int");
+
+    gen(&cd, "float");
     return 0;
 }
 
-void generator_run()
+void gen(mp_state *ceta_data, char *type)
 {
-    ceta_data cd;
-    cd.cf_name = "eep.meta";
-    cd.flags = 0;
-    cd.flags |= CLEAN;
-    cd.types = "int";
+    char *in_data = yk_file_reader(ceta_data->in_path);
 
-    cd.cf_data = yk_file_reader(cd.cf_name);
+    _replace_angled_brackets(in_data);
 
-    printf("%s", cd.cf_data);
+    in_data = _replace(in_data, "T", type);
 
-    gen(&cd);
-    printf("%s", cd.cf_data);
+    file_writer(ceta_data->out_path, in_data);
 
-    free(cd.cf_data);
-}
-
-void gen(ceta_data *ceta_data)
-{
-    _replace_angled_brackets(ceta_data->cf_data);
-    ceta_data->cf_data = _replace(ceta_data->cf_data, "T", ceta_data->types);
-
-    {
-        char c;
-        if (ceta_data->flags & CLEAN)
-        {
-            c = 'w';
-        }
-        else
-        {
-            c = 'a';
-        }
-
-        file_writer("../src/gen.h", ceta_data->cf_data);
-    }
+    free(in_data);
 }
 
 void _replace_angled_brackets(char *input)
@@ -107,7 +88,7 @@ void file_writer(const char *filepath, const char *data)
 {
 
     FILE *file;
-    fopen_s(&file, filepath, "w");
+    fopen_s(&file, filepath, "a");
 
     if (file == NULL)
     {
@@ -116,6 +97,13 @@ void file_writer(const char *filepath, const char *data)
 
     fprintf(file, "%s\n", data);
 
+    fclose(file);
+}
+
+void file_clean(const char *filepath)
+{
+    FILE *file;
+    fopen_s(&file, filepath, "w");
     fclose(file);
 }
 
