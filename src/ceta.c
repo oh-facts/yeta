@@ -6,27 +6,33 @@ fopen_s() is only defined in windows
 #define fopen_s(pFile, filepath, mode) ((*(pFile)) = fopen((filepath), (mode))) == NULL
 #endif
 
-char *yk_file_reader(const char *filepath);
+char *file_reader(const char *filepath);
 void file_writer(const char *filepath, const char *data);
 void _replace_angled_brackets(char *input);
 char *_replace(const char *string, const char *search, const char *replace);
 
 int main()
 {
-    file_clean("../src/gen.h");
     mp_state cd;
+
     cd.in_path = "eep.meta";
     cd.out_path = "../sandbox/gen.h";
 
-    gen(&cd, "int");
+    yk_yektor_innit(&template_list, 5, sizeof(char));
 
+    file_clean(cd.out_path);
+
+    gen(&cd, "int");
     gen(&cd, "float");
+
     return 0;
 }
 
+YK_Yektor template_list;
+
 void gen(mp_state *ceta_data, char *type)
 {
-    char *in_data = yk_file_reader(ceta_data->in_path);
+    char *in_data = file_reader(ceta_data->in_path);
 
     _replace_angled_brackets(in_data);
 
@@ -107,7 +113,7 @@ void file_clean(const char *filepath)
     fclose(file);
 }
 
-char *yk_file_reader(const char *filepath)
+char *file_reader(const char *filepath)
 {
     FILE *file;
     fopen_s(&file, filepath, "r");

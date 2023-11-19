@@ -1,0 +1,14 @@
+.meta file - Consists of "meta" code
+
+every code snippet is preceed with a @tag
+
+@template:
+C++ styled templates
+
+@nochange
+copy over as is
+
+First the meta file is read whole
+Then it is Tokenized and stored as different chunks. A chunk starts at a tag and ends before the next tag.
+
+Chunks are used to generate code then and then they're written to a file.

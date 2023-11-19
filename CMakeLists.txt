@@ -3,11 +3,10 @@ set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
 project(reflection)
 
-add_executable(generator "src/ceta.c")
+add_executable(generator "src/ceta.c" "src/yektor.c" "src/c_string.c")
 
 add_custom_target(run_generator
     COMMAND generator
-    DEPENDS "src/ceta.c"
     COMMENT "Running code generator"
     VERBATIM
 )
