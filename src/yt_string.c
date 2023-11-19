@@ -1,6 +1,5 @@
-
-#include "c_string.h"
-void string_innit(C_String *str, const char *initial)
+#include "yt_string.h"
+void yt_string_innit(YT_String *str, const char *initial)
 {
     str->data = malloc(strlen(initial) + 1);
 
@@ -23,7 +22,7 @@ void string_innit(C_String *str, const char *initial)
     }
 }
 
-void string_set(C_String *str, const char *new_value)
+void yt_string_set(YT_String *str, const char *new_value)
 {
     str->data = realloc(str->data, strlen(new_value) + 1);
     if (str->data != NULL)
@@ -45,16 +44,16 @@ void string_set(C_String *str, const char *new_value)
     }
 }
 
-void string_free(C_String *str)
+void yt_string_free(YT_String *str)
 {
     free(str->data);
     str->data = NULL;
     str->length = 0;
 }
 
-C_String string_clone(const C_String *str)
+YT_String yt_string_clone(const YT_String *str)
 {
-    C_String out;
-    string_innit(&out, str->data);
+    YT_String out;
+    yt_string_innit(&out, str->data);
     return out;
 }

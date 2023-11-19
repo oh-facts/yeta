@@ -2,8 +2,8 @@
 dynamic vector I lifted from a different project
 */
 
-#ifndef YK_YEKTOR_H
-#define YK_YEKTOR_H
+#ifndef YT_VECTOR_H
+#define YT_VECTOR_H
 
 #include <stdio.h>
 #include <stdlib.h>

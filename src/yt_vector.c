@@ -1,4 +1,4 @@
-#include "yektor.h"
+#include "yt_vector.h"
 
 void yk_yektor_resize(YK_Yektor *vector)
 {

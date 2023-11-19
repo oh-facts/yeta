@@ -3,7 +3,7 @@ set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
 project(reflection)
 
-add_executable(generator "src/ceta.c" "src/yektor.c" "src/c_string.c")
+add_executable(generator "src/yeta.c" "src/yt_vector.c" "src/yt_string.c" "src/yt_file.c")
 
 add_custom_target(run_generator
     COMMAND generator

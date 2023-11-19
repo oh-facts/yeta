@@ -2,3 +2,5 @@
 0. vector
 1. Tokenize and hold @templates functions in different chunks
 2. vector should be able to deep copy
+3. refactor
+4. store tag name and call appropriate generator
