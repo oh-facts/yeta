@@ -1,4 +1,5 @@
 #include "ceta.h"
+#include "c_string.h"
 /*
 fopen_s() is only defined in windows
 */
@@ -10,6 +11,12 @@ char *file_reader(const char *filepath);
 void file_writer(const char *filepath, const char *data);
 void _replace_angled_brackets(char *input);
 char *_replace(const char *string, const char *search, const char *replace);
+void tokenize();
+
+void template_list_print();
+
+YK_Yektor template_list;
+C_String meta_data;
 
 int main()
 {
@@ -18,29 +25,74 @@ int main()
     cd.in_path = "eep.meta";
     cd.out_path = "../sandbox/gen.h";
 
-    yk_yektor_innit(&template_list, 5, sizeof(char));
+    yk_yektor_innit(&template_list, 10, sizeof(C_String));
+
+    {
+        char *temp = file_reader(cd.in_path);
+        string_innit(&meta_data, temp);
+        free(temp);
+    }
 
     file_clean(cd.out_path);
 
     gen(&cd, "int");
-    gen(&cd, "float");
+    // gen(&cd, "float");
 
     return 0;
 }
 
-YK_Yektor template_list;
+void tokenize()
+{
+
+    C_String chunk;
+    string_innit(&chunk, "p");
+
+    char *token;
+    char *context;
+
+    const char delimiters[] = "@";
+
+    token = strtok_s(meta_data.data, delimiters, &context);
+
+    while (token != NULL)
+    {
+        string_set(&chunk, token);
+        
+        C_String temp = string_clone(&chunk);
+        yk_yektor_push(&template_list, &temp);
+
+        token = strtok_s(NULL, delimiters, &context);
+    }
+
+    // printf("%d \n", chunk.length);
+
+    string_free(&chunk);
+    template_list_print();
+}
 
 void gen(mp_state *ceta_data, char *type)
 {
-    char *in_data = file_reader(ceta_data->in_path);
+    C_String *handle;
+    {
+        C_String string;
+        char *temp = file_reader(ceta_data->in_path);
+        string_innit(&string, temp);
+        free(temp);
 
-    _replace_angled_brackets(in_data);
+        handle = yk_yektor_push(&template_list, &string);
+        string_free(&string);
+    }
 
-    in_data = _replace(in_data, "T", type);
+    tokenize();
 
-    file_writer(ceta_data->out_path, in_data);
+    /*
+        _replace_angled_brackets(handle->data);
 
-    free(in_data);
+        handle->data = _replace(handle->data, "T", type);
+
+        file_writer(ceta_data->out_path, handle->data);
+
+    */
 }
 
 void _replace_angled_brackets(char *input)
@@ -156,4 +208,17 @@ char *file_reader(const char *filepath)
     fclose(file);
 
     return string;
+}
+
+void template_list_print()
+{
+    int num = template_list.size;
+    for (int i = 0; i < num; i++)
+    {
+        C_String *temp = yk_yektor_get(&template_list, i);
+
+        printf("-----%d---- \n", i);
+        printf("%s \n", temp->data);
+        printf("-----%d---- \n", i);
+    }
 }

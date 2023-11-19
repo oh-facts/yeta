@@ -35,9 +35,25 @@ void *yk_yektor_push(YK_Yektor *vector, void *element)
     }
 
     void *dest = (char *)vector->data + (vector->size * vector->element_size);
+
+    vector->size++;
     memcpy(dest, element, vector->element_size);
+    
+    return dest;
+}
+
+void *yk_yektor_push_deep(YK_Yektor *vector, void *element, void (*copy_element)(void *dest, const void *src))
+{
+    if (vector->size >= vector->capacity)
+    {
+        yk_yektor_resize(vector);
+    }
+
+    void *dest = (char *)vector->data + (vector->size * vector->element_size);
+
     vector->size++;
 
+    copy_element(dest, element);
     return dest;
 }
 

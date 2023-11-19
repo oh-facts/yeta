@@ -2,7 +2,6 @@
 dynamic vector I lifted from a different project
 */
 
-
 #ifndef YK_YEKTOR_H
 #define YK_YEKTOR_H
 
@@ -40,8 +39,15 @@ void yk_yektor_innit(YK_Yektor *vector, size_t capacity, size_t element_size);
 
 /*
     Pushes element to yektor. Yektor owns element now, and returns a reference to the element.
+    This is a shallow copy!
 */
 void *yk_yektor_push(YK_Yektor *vector, void *element);
+
+/*
+    Pushes element to yektor. Yektor owns element now, and returns a reference to the element.
+    This is a deep copy!
+*/
+void *yk_yektor_push_deep(YK_Yektor *vector, void *element, void (*copy_element)(void *dest, const void *src));
 
 /*
     Inserts element at index. Owns the element and returns a reference to the element.
@@ -70,7 +76,7 @@ void yk_yektor_pop(YK_Yektor *vector);
 void *yk_yektor_pop_get(YK_Yektor *vector);
 
 /*
-    Frees all the data.
+    Frees all the data. This is a shallow destroy!
 */
 void yk_yektor_destroy(YK_Yektor *vector);
 
