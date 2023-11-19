@@ -23,7 +23,7 @@ void yt_string_innit(YT_String *str, const char *initial)
 }
 
 void yt_string_set(YT_String *str, const char *new_value)
-{
+{   
     str->data = realloc(str->data, strlen(new_value) + 1);
     if (str->data != NULL)
     {

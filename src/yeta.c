@@ -5,9 +5,13 @@ void _replace_angled_brackets(char *input);
 char *_replace(const char *string, const char *search, const char *replace);
 void tokenize();
 
+void template_generator();
+void template_writer(YT_State *state);
 void template_list_print();
 
-YK_Yektor template_list;
+YK_Yektor meta_template_list;
+YK_Yektor gen_template_list;
+
 YT_String meta_data;
 
 int main()
@@ -17,7 +21,7 @@ int main()
     cd.in_path = "eep.meta";
     cd.out_path = "../sandbox/gen.h";
 
-    yk_yektor_innit(&template_list, 10, sizeof(YT_String));
+    yk_yektor_innit(&meta_template_list, 10, sizeof(YT_String));
 
     {
         char *temp = yt_file_reader(cd.in_path);
@@ -28,6 +32,7 @@ int main()
     yt_file_clean(cd.out_path);
 
     yt_gen(&cd, "int");
+    // printf("%d", meta_template_list.size);
     // gen(&cd, "float");
 
     return 0;
@@ -48,10 +53,10 @@ void tokenize()
 
     while (token != NULL)
     {
-        yt_string_set(&chunk, token);
-        
+        yt_string_innit(&chunk, token);
+
         YT_String temp = yt_string_clone(&chunk);
-        yk_yektor_push(&template_list, &temp);
+        yk_yektor_push(&meta_template_list, &temp);
 
         token = strtok_s(NULL, delimiters, &context);
     }
@@ -59,32 +64,37 @@ void tokenize()
     // printf("%d \n", chunk.length);
 
     yt_string_free(&chunk);
-    template_list_print();
 }
 
 void yt_gen(YT_State *ceta_data, char *type)
 {
-    YT_String *handle;
-    {
-        YT_String string;
-        char *temp = yt_file_reader(ceta_data->in_path);
-        yt_string_innit(&string, temp);
-        free(temp);
-
-        handle = yk_yektor_push(&template_list, &string);
-        yt_string_free(&string);
-    }
 
     tokenize();
 
-    /*
+    template_generator();
+
+    template_list_print();
+
+    template_writer(ceta_data);
+}
+
+void template_generator()
+{
+    for (int i = 0; i < meta_template_list.size; i++)
+    {
+        YT_String *handle = yk_yektor_get(&meta_template_list, i);
         _replace_angled_brackets(handle->data);
+        handle->data = _replace(handle->data, "T", "int");
+    }
+}
 
-        handle->data = _replace(handle->data, "T", type);
-
-        yt_file_writer(ceta_data->out_path, handle->data);
-
-    */
+void template_writer(YT_State *state)
+{
+    for (int i = 0; i < meta_template_list.size; i++)
+    {
+        YT_String *handle = yk_yektor_get(&meta_template_list, i);
+        yt_file_writer(state->out_path, handle->data);
+    }
 }
 
 void _replace_angled_brackets(char *input)
@@ -136,10 +146,10 @@ char *_replace(const char *string, const char *search, const char *replace)
 
 void template_list_print()
 {
-    int num = template_list.size;
+    int num = meta_template_list.size;
     for (int i = 0; i < num; i++)
     {
-        YT_String *temp = yk_yektor_get(&template_list, i);
+        YT_String *temp = yk_yektor_get(&meta_template_list, i);
 
         printf("-----%d---- \n", i);
         printf("%s \n", temp->data);
