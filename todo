@@ -9,3 +9,14 @@
 5.  4.5 doesn't matter
 6. Remove template keyword and copy properly.
 7. Make a sensible parser and tokenizer
+
+
+
+
+
+
+
+
+Future goals so I don't forget
+1. gen folder for meta meta-data
+2. copy gen files gracefully
