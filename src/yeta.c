@@ -9,6 +9,10 @@ void template_generator();
 void template_writer(YT_State *state);
 void template_list_print();
 
+void find_generator();
+
+void yt_remove_word(char *str, const char *word);
+
 YK_Yektor meta_template_list;
 YK_Yektor gen_template_list;
 
@@ -73,7 +77,9 @@ void yt_gen(YT_State *ceta_data, char *type)
 
     template_generator();
 
-    template_list_print();
+    find_generator();
+
+    // template_list_print();
 
     template_writer(ceta_data);
 }
@@ -154,5 +160,60 @@ void template_list_print()
         printf("-----%d---- \n", i);
         printf("%s \n", temp->data);
         printf("-----%d---- \n", i);
+    }
+}
+
+typedef enum TAGS
+{
+    TEMPLATE
+} TAGS;
+
+void find_generator()
+{
+    for (int i = 0; i < meta_template_list.size; i++)
+    {
+        YT_String *handle = yk_yektor_get(&meta_template_list, i);
+        YT_String temp = yt_string_clone(handle);
+
+        char *token;
+        char *context;
+
+        const char delimiters[] = "\n";
+
+        token = strtok_s(temp.data, delimiters, &context);
+       // printf("%s \n", token);
+
+        if (strcmp(token, "template") == 0)
+        {
+            token = strtok_s(NULL, delimiters, &context);
+            // printf("%s \n", token);
+            // printf("%s \n", temp.data);
+
+            char *temp2 = (yt_string_clone(handle)).data;
+            yt_remove_word(temp2, "template");
+
+            // yt_remove_word(temp.data)
+
+            yt_string_set(handle, temp2);
+
+            free(temp2);
+        }
+
+        else if (strcmp(token, "nochange") == 0)
+        {
+            printf("peop");
+        }
+
+        yt_string_free(&temp);
+    }
+}
+
+void yt_remove_word(char *str, const char *word)
+{
+    size_t wordLen = strlen(word);
+
+    while ((str = strstr(str, word)) != NULL)
+    {
+        memmove(str, str + wordLen, strlen(str + wordLen) + 1);
     }
 }

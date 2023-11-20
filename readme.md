@@ -24,7 +24,7 @@ compile/build generated file
 Usage 
 eg-1
 ```
-@types : [int, Bar] [Goob, Bar]
+@template : [int, Bar] [Goob, Bar]
 void foo<T,A>(T a, A* b)
 {
     //do something

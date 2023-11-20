@@ -1,6 +1,8 @@
 #include "gen.h"
+
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 
 int main()
 {
@@ -13,9 +15,8 @@ int main()
 
    for(int i = 0; i < myarray.max_size; i ++)
    {
-      printf("%d\n",myarray.data[i]);
+     printf("%d\n",myarray.data[i]);
    }
    
-
    return 0;
 }

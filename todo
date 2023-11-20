@@ -3,4 +3,9 @@
 1. Tokenize and hold @templates functions in different chunks
 2. vector should be able to deep copy
 3. refactor
+3.5 solve million clone bugs
 4. store tag name and call appropriate generator
+4.5 @ symbol shouldn't be swallowed by tokenizer
+5.  4.5 doesn't matter
+6. Remove template keyword and copy properly.
+7. Make a sensible parser and tokenizer
