@@ -1,3 +1,4 @@
+current todo
 -1. string
 0. vector
 1. Tokenize and hold @templates functions in different chunks
@@ -14,9 +15,12 @@
 
 
 
+other todo
+1. Don't modify meta data string directly. Clone it, make changes, and copy back.
 
 
 
-Future goals so I don't forget
+Future todo so I don't forget
+0. tokenize <T> symbol instead of whatever the fuck you did
 1. gen folder for meta meta-data
 2. copy gen files gracefully
