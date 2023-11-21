@@ -80,7 +80,7 @@ void *yk_yektor_insert(YK_Yektor *vector, void *element, size_t index)
     vector->size++;
     return dest;
 }
-
+    
 void yk_yektor_set(YK_Yektor *vector, void *element, size_t index)
 {
     if (index >= vector->capacity)

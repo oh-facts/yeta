@@ -3,7 +3,6 @@
 
 void _replace_angled_brackets(char *input);
 char *_replace(const char *string, const char *search, const char *replace);
-void tokenize();
 
 void template_generator();
 void template_writer(YT_State *state);
@@ -35,45 +34,25 @@ int main()
 
     yt_file_clean(cd.out_path);
 
-    yt_gen(&cd, "int");
-    // printf("%d", meta_template_list.size);
-    // gen(&cd, "float");
+    YT_Tokenized_data td;
+    token_data_innit(&td);
+
+    tokenize(&meta_data, &td);
+    write_token_data(&td, cd.out_path);
+
+    // token_data_free(&td);
+
+    // yt_gen(&cd, "int");
+    //  printf("%d", meta_template_list.size);
+    //  gen(&cd, "float");
 
     return 0;
-}
-
-void tokenize()
-{
-
-    YT_String chunk;
-    yt_string_innit(&chunk, "p");
-
-    char *token;
-    char *context;
-
-    const char delimiters[] = "@";
-
-    token = strtok_s(meta_data.data, delimiters, &context);
-
-    while (token != NULL)
-    {
-        yt_string_innit(&chunk, token);
-
-        YT_String temp = yt_string_clone(&chunk);
-        yk_yektor_push(&meta_template_list, &temp);
-
-        token = strtok_s(NULL, delimiters, &context);
-    }
-
-    // printf("%d \n", chunk.length);
-
-    yt_string_free(&chunk);
 }
 
 void yt_gen(YT_State *ceta_data, char *type)
 {
 
-    tokenize();
+    // tokenize();
 
     template_generator();
 
@@ -163,11 +142,6 @@ void template_list_print()
     }
 }
 
-typedef enum TAGS
-{
-    TEMPLATE
-} TAGS;
-
 void find_generator()
 {
     for (int i = 0; i < meta_template_list.size; i++)
@@ -181,7 +155,7 @@ void find_generator()
         const char delimiters[] = "\n";
 
         token = strtok_s(temp.data, delimiters, &context);
-       // printf("%s \n", token);
+        // printf("%s \n", token);
 
         if (strcmp(token, "template") == 0)
         {

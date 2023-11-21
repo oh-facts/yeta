@@ -11,7 +11,12 @@ typedef struct YT_String
     size_t length;
 } YT_String;
 
+/*
+    Allocates space for the initial and sets it to data.
+    Sets length to strlen(initial) + 1
 
+    Set directly incase you don't want to deep clone
+*/
 void yt_string_innit(YT_String *str, const char *initial);
 void yt_string_set(YT_String *str, const char *new_value);
 

@@ -6,6 +6,9 @@
 
 int main()
 {
+   /*
+   
+   
    int c = add_int_(5, 6);
 
    printf("%d \n", c);
@@ -17,6 +20,6 @@ int main()
    {
      printf("%d\n",myarray.data[i]);
    }
-   
+   */
    return 0;
 }
