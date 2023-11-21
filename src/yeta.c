@@ -1,7 +1,6 @@
 #include "yeta.h"
 #include "yt_string.h"
 
-void _replace_angled_brackets(char *input);
 char *_replace(const char *string, const char *search, const char *replace);
 
 void template_generator();
@@ -38,6 +37,7 @@ int main()
     token_data_innit(&td);
 
     tokenize(&meta_data, &td);
+    interpret_tokenized_date(&td);
     write_token_data(&td, cd.out_path);
 
     // token_data_free(&td);
@@ -68,8 +68,8 @@ void template_generator()
     for (int i = 0; i < meta_template_list.size; i++)
     {
         YT_String *handle = yk_yektor_get(&meta_template_list, i);
-        _replace_angled_brackets(handle->data);
-        handle->data = _replace(handle->data, "T", "int");
+        //_replace_angled_brackets(handle->data);
+        //handle->data = _replace(handle->data, "T", "int");
     }
 }
 
@@ -82,52 +82,6 @@ void template_writer(YT_State *state)
     }
 }
 
-void _replace_angled_brackets(char *input)
-{
-    for (int i = 0; input[i]; i++)
-    {
-        if ((input[i] == '<' && input[i + 1] == 'T') || input[i] == '>' && input[i - 1] == 'T')
-        {
-            input[i] = '_';
-        }
-    }
-}
-
-char *_replace(const char *string, const char *search, const char *replace)
-{
-    char *result;
-    int i, cnt = 0;
-    size_t replaceLen = strlen(replace);
-    size_t searchLen = strlen(search);
-
-    for (i = 0; string[i] != '\0'; i++)
-    {
-        if (strstr(&string[i], search) == &string[i])
-        {
-            cnt++;
-
-            i += searchLen - 1;
-        }
-    }
-
-    result = (char *)malloc(i + cnt * (replaceLen - searchLen) + 1);
-
-    i = 0;
-    while (*string)
-    {
-        if (strstr(string, search) == string)
-        {
-            strcpy_s(&result[i], replaceLen + 1, replace);
-            i += replaceLen;
-            string += searchLen;
-        }
-        else
-            result[i++] = *string++;
-    }
-
-    result[i] = '\0';
-    return result;
-}
 
 void template_list_print()
 {

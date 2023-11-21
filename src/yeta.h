@@ -9,6 +9,7 @@
 #include "yt_file.h"
 #include "yt_parser.h"
 #include "yt_generator.h"
+#include "yt_interpreter.h"
 
 struct YT_State
 {

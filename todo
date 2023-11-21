@@ -10,7 +10,8 @@ current todo
 5.  4.5 doesn't matter
 6. Remove template keyword and copy properly.
 7. Make a sensible parser and tokenizer
-
+8. Make an interpreter
+9. function name & parameter list should be different tokens
 
 
 

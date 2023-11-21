@@ -7,7 +7,7 @@ project(reflection)
 
 
 add_executable(generator "src/yeta.c" "src/yt_vector.c" "src/yt_string.c" "src/yt_file.c" "src/yt_parser.c"
-                            "src/yt_generator.c")
+                            "src/yt_generator.c" "src/yt_interpreter.c")
 
 add_custom_target(run_generator
     COMMAND generator
