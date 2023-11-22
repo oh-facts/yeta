@@ -7,7 +7,6 @@ void write_token_data(const YT_Tokenized_data *token_data, const char *file_path
     {
         char *temp_1 = ((YT_String *)token_data->token.data)[i].data;
         yt_file_writer(file_path, temp_1);
+        
     }
-
-    printf("%d \n", size);
 }

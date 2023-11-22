@@ -23,10 +23,6 @@ void yt_string_set(YT_String *str, const char *new_value);
 void yt_string_free(YT_String *str);
 YT_String yt_string_clone(const YT_String *str);
 
-/*
-    deep clones a "C" styled string, i.e, a char ptr
-*/
-char *cstring_clone(char *str);
 
 char *yt_string_replace_word(const char *string, const char *search, const char *replace);
 
