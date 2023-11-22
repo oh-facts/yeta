@@ -33,8 +33,10 @@ int main()
 
     yt_file_clean(cd.out_path);
 
-    YT_Tokenized_data td;
-    token_data_innit(&td);
+    //YT_Tokenized_data td;
+    //token_data_innit(&td);
+
+    chunk chunklist;
 
     tokenize(&meta_data, &td);
     interpret_tokenized_date(&td);
