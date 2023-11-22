@@ -25,5 +25,5 @@ YT_String yt_string_clone(const YT_String *str);
 
 
 char *yt_string_replace_word(const char *string, const char *search, const char *replace);
-
+char *cstring_clone(char *str);
 #endif

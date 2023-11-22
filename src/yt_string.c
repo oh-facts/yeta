@@ -93,3 +93,25 @@ char *yt_string_replace_word(const char *string, const char *search, const char 
     result[i] = '\0';
     return result;
 }
+
+
+char *cstring_clone(char *str)
+{
+    int size = strlen(str) + 1;
+
+    char *out = malloc(size);
+    if (!out)
+    {
+        perror("cstring clone failed: Not enough memory");
+        exit(EXIT_FAILURE);
+    }
+
+    strcpy_s(out, size, str);
+    if (!out)
+    {
+        perror("cstring clone failed: Copy failed");
+        exit(EXIT_FAILURE);
+    }
+
+    return out;
+}
