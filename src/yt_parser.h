@@ -7,7 +7,7 @@
 enum TOKEN_TYPE
 {
     NO_TYPE,
-    TAG,
+    TEMPLATE,
     FUNCTION_BLOCK,
 };
 
@@ -15,19 +15,11 @@ typedef enum TOKEN_TYPE TOKEN_TYPE;
 
 struct YT_Tokenized_data
 {
-    YK_Yektor blocks;      //yektor of fn_data
-    YK_Yektor tag_types;  //int
+    YK_Yektor token;
+    YK_Yektor type;
 };
 
 typedef struct YT_Tokenized_data YT_Tokenized_data;
-
-struct fn_data
-{
-    YK_Yektor names;  //string
-    YK_Yektor block;  //string
-};
-
-typedef struct fn_data fn_data;
 
 void token_data_innit(YT_Tokenized_data *data);
 void token_data_free(YT_Tokenized_data *data);
