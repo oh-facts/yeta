@@ -36,9 +36,13 @@ int main()
     YT_Tokenized_data td;
     token_data_innit(&td);
 
-    tokenize(&meta_data, &td);
-    interpret_tokenized_date(&td);
-    write_token_data(&td, cd.out_path);
+    tokenized_data_list tdl;
+    token_list_innit(&tdl);
+
+    tokenize(&meta_data, &tdl);
+    // tokenize_template(&meta_data, &td);
+    // interpret_tokenized_date(&td);
+    // write_token_data(&td, cd.out_path);
 
     // token_data_free(&td);
 
@@ -69,7 +73,7 @@ void template_generator()
     {
         YT_String *handle = yk_yektor_get(&meta_template_list, i);
         //_replace_angled_brackets(handle->data);
-        //handle->data = _replace(handle->data, "T", "int");
+        // handle->data = _replace(handle->data, "T", "int");
     }
 }
 
@@ -81,7 +85,6 @@ void template_writer(YT_State *state)
         yt_file_writer(state->out_path, handle->data);
     }
 }
-
 
 void template_list_print()
 {

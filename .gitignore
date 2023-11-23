@@ -1,2 +1,3 @@
 out*
 sandbox/gen.h
+.vscode/*
