@@ -4,33 +4,28 @@
 #include "yt_string.h"
 #include "yt_vector.h"
 
-enum TOKEN_TYPE
+typedef struct Chunks Chunks;
+typedef struct struct_template struct_template;
+
+struct Chunks
 {
-    NO_TYPE,
-    TEMPLATE,
-    FUNCTION_BLOCK,
+    YK_Yektor struct_templates;
+ 
 };
 
-typedef enum TOKEN_TYPE TOKEN_TYPE;
-
-struct YT_Tokenized_data
+struct struct_template
 {
-    YK_Yektor token;
-    YK_Yektor type;
+    YT_String struct_name;
+    YK_Yektor variable_names;
+    YK_Yektor variable_types;
 };
-
-typedef struct YT_Tokenized_data YT_Tokenized_data;
-
-void token_data_innit(YT_Tokenized_data *data);
-void token_data_free(YT_Tokenized_data *data);
-
-void tokenize(const YT_String *in, YT_Tokenized_data *data);
-TOKEN_TYPE get_token_type(char *token);
-void token_data_print(YT_Tokenized_data *data);
 
 /*
-    Solves no purpose. Don't use
+    Breaks the meta file content into separate chunks.
+    each chunk is tag + block.
 */
-char *peek(char *in, char *delimiters);
+void break_into_chunks(YT_String *meta_file_content, Chunks *chunks);
+
+void print_chunks(const Chunks *chunks);
 
 #endif

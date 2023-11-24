@@ -63,7 +63,7 @@ void yk_yektor_set(YK_Yektor *vector, void *element, size_t index);
 /*
     Returns a pointer to the data at index
 */
-void *yk_yektor_get(YK_Yektor *vector, size_t index);
+void *yk_yektor_get(const YK_Yektor *vector, size_t index);
 
 /*
     Pop element.

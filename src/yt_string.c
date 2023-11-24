@@ -94,8 +94,7 @@ char *yt_string_replace_word(const char *string, const char *search, const char 
     return result;
 }
 
-
-char *cstring_clone(char *str)
+char *cstring_clone(const char *str)
 {
     int size = strlen(str) + 1;
 
@@ -114,4 +113,24 @@ char *cstring_clone(char *str)
     }
 
     return out;
+}
+
+char *peek(const char *in)
+{
+    char *out_token;
+    char *context;
+
+    char *in_temp = cstring_clone(in);
+
+    while (isspace(*in_temp))
+    {
+        in_temp++;
+    }
+
+    in_temp = strtok_s(in_temp, "}", &context);
+    printf("%s ", in_temp);
+    in_temp = strtok_s(NULL, " ", &context);
+    printf("%s ", in_temp);
+
+    return in_temp;
 }

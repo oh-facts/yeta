@@ -4,6 +4,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <ctype.h>
 
 typedef struct YT_String
 {
@@ -25,5 +26,11 @@ YT_String yt_string_clone(const YT_String *str);
 
 
 char *yt_string_replace_word(const char *string, const char *search, const char *replace);
-char *cstring_clone(char *str);
+char *cstring_clone(const char *str);
+
+/*
+    Don't use. doesn't work
+*/
+char *peek(const char *in);
+
 #endif

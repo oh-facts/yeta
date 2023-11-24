@@ -1,5 +1,5 @@
 #include "yt_generator.h"
-
+/*
 void write_token_data(const YT_Tokenized_data *token_data, const char *file_path)
 {
     int size = token_data->token.size;
@@ -10,3 +10,5 @@ void write_token_data(const YT_Tokenized_data *token_data, const char *file_path
         
     }
 }
+
+*/

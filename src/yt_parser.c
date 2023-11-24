@@ -1,91 +1,106 @@
 #include "yt_parser.h"
+#include <ctype.h>
 
-void token_data_innit(YT_Tokenized_data *data)
-{
-    yk_yektor_innit(&data->token, 5, sizeof(YT_String));
-    yk_yektor_innit(&data->type, 5, sizeof(TOKEN_TYPE));
-}
-
-void tokenize(const YT_String *in, YT_Tokenized_data *data)
+void break_into_chunks(YT_String *meta_file_content, Chunks *chunks)
 {
 
-    char *token;
+    {   
+        yk_yektor_innit(&chunks->struct_templates, 1, sizeof(struct_template));
+
+        struct_template st;
+        yk_yektor_innit(&st.variable_names, 1, sizeof(YT_String));
+        yk_yektor_innit(&st.variable_types, 1, sizeof(YT_String));
+
+        YT_String string;
+        yt_string_innit(&string, "fe");
+        st.struct_name = string;
+        yt_string_innit(&st.struct_name, "default_struct");
+
+        yk_yektor_push(&chunks->struct_templates, &st);
+    }
+
+    YT_String data = yt_string_clone(meta_file_content);
+
     char *context;
 
-    const char delimiters[] = "@";
+    // upto @
+    char *result = strtok_s(data.data, "@", &context);
 
-    token = strtok_s(in->data, delimiters, &context);
-
-    int count = 0;
-    while (1)
+    // catch tag_type
+    result = strtok_s(NULL, "\n", &context);
+    // printf("%s ", result);
+    if (strcmp(result, "struct") == 0)
     {
 
-        token = strtok_s(NULL, "\n", &context);
-        if (token == NULL)
+        result = strtok_s(NULL, "\n", &context);
+        // printf("%s ", result);
+
+        struct_template *st_handle = yk_yektor_get(&chunks->struct_templates, 0);
+        YK_Yektor *st_var_names_handle = &st_handle->variable_names;
+        YK_Yektor *st_var_types_handle = &st_handle->variable_types;
+
+        YT_String *name_handle = &st_handle->struct_name;
+        yt_string_set(name_handle, result);
+
+        // bracket open
+        result = strtok_s(NULL, " ", &context);
+
+        while (result != 0)
         {
-            break;
+            // var type
+            result = strtok_s(NULL, " ", &context);
+            // printf("%s", result);
+            if (strcmp(result, "};") == 0)
+            {
+                break;
+            }
+
+            {
+                YT_String var_type;
+                yt_string_innit(&var_type, result);
+                yk_yektor_push(st_var_types_handle, &var_type);
+            }
+
+            // var name
+            result = strtok_s(NULL, "\n", &context);
+            // printf("%s", result);
+            {
+                YT_String var_name;
+                yt_string_innit(&var_name, result);
+                yk_yektor_push(st_var_names_handle, &var_name);
+            }
+        }
+    }
+
+    print_chunks(chunks);
+}
+
+void print_chunks(const Chunks *chunks)
+{
+
+    int num = chunks->struct_templates.size;
+
+    for (int i = 0; i < num; i++)
+    {
+
+        struct_template *st_handle = yk_yektor_get(&chunks->struct_templates, i);
+        YT_String *name_handle = &st_handle->struct_name;
+        printf("chunk tag name: %s\n", name_handle->data);
+
+        YK_Yektor *st_var_names_handle = &st_handle->variable_names;
+        YK_Yektor *st_var_types_handle = &st_handle->variable_types;
+
+        int num2 = st_var_names_handle->size;
+
+        for (int j = 0; j < num2; j++)
+        {
+            YT_String *type_handle = yk_yektor_get(st_var_types_handle, j);
+            printf("var type %d: %s\n", j, type_handle->data);
+
+            YT_String *name_handle = yk_yektor_get(st_var_names_handle, j);
+            printf("var name %d: %s\n", j, name_handle->data);
         }
 
-        TOKEN_TYPE temp_type = get_token_type(token);
-        void *temp_type_ptr = &temp_type;
-        yk_yektor_push(&data->type, temp_type_ptr);
-
-        token = strtok_s(NULL, delimiters, &context);
-        if (token == NULL)
-        {
-            break;
-        }
-        YT_String func_block;
-        yt_string_innit(&func_block, token);
-        yk_yektor_push(&data->token, &func_block);
-        count++;
+        printf("------\n");
     }
-
-    // token_data_print(data);
-}
-
-void token_data_print(YT_Tokenized_data *data)
-{
-    for (int i = 0; i < data->type.size; i++)
-    {
-        YT_String temp_token = ((YT_String *)data->token.data)[i];
-        printf("%s \n", temp_token.data);
-
-        int temp_type = ((int *)data->type.data)[i];
-        printf("%d \n", temp_type);
-    }
-}
-
-TOKEN_TYPE get_token_type(char *token)
-{
-
-    if (strcmp(token, "template") == 0)
-    {
-        return TEMPLATE;
-    }
-
-    return NO_TYPE;
-}
-
-char *peek(char *in, char *delimiters)
-{
-    char *out_token;
-    char *context;
-
-    out_token = strtok_s(in, delimiters, &context);
-
-    return out_token;
-}
-
-void token_data_free(YT_Tokenized_data *data)
-{
-    // later, allow vector to accept function pointer to destroy
-
-    for (int i = 0; i < data->token.capacity; i++)
-    {
-        yt_string_free(yk_yektor_get(&data->token, i));
-    }
-
-    yk_yektor_destroy(&data->token);
-    yk_yektor_destroy(&data->type);
 }

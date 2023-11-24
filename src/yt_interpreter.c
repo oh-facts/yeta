@@ -1,5 +1,5 @@
 #include "yt_interpreter.h"
-
+/*
 void interpret_tokenized_date(YT_Tokenized_data *data)
 {
     int num = data->token.size;
@@ -17,3 +17,4 @@ void interpret_tokenized_date(YT_Tokenized_data *data)
         free(temp);
     }
 }
+*/
