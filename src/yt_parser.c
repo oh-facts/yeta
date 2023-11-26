@@ -242,12 +242,21 @@ void scan_tokens(scanner *scanner)
 {
     while (!is_at_end(scanner))
     {
-        char current_char = scanner->source[scanner->current];
+        const char *current_char = &(scanner->source[scanner->current]);
         // printf("%c", current_char);
         // printf("%d", get_token_type(&current_char));
-        scanner->current++;
-        token_type tk = get_token_type(&current_char);
+
+        // advance whole tokens, skipping whitespace
+        if (*current_char == '\n' || *current_char == ' ')
+        {
+            scanner->current++;
+            continue;
+        }
+
+        token_type tk = get_token_type(current_char);
         yk_yektor_push(&scanner->token_list, &tk);
+
+        scanner->current++;
         advance(scanner);
     }
 
@@ -297,6 +306,23 @@ token_type get_token_type(const char *str)
     case ';':
         out = SEMICOLON;
         break;
+    case '@':
+
+        if (peek(str, 1) == 's')
+        {
+            out = TAG_STRUCT;
+        }
+
+        break;
+    /*
+        fall through cases
+    */
+    case ' ':
+        printf("uncaught whitespace");
+    case '\n':
+        printf("uncaught line break");
+        break;
+
     default:
         break;
     }

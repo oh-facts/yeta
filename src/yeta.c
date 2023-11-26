@@ -5,6 +5,8 @@ void yt_remove_word(char *str, const char *word);
 
 YT_String meta_data;
 
+void peek_tests();
+
 int main()
 {
     YT_State cd;
@@ -27,7 +29,6 @@ int main()
     scanner_innit(&sc, meta_data.data);
     scan_tokens(&sc);
 
-
     return 0;
 }
 
@@ -39,4 +40,12 @@ void yt_remove_word(char *str, const char *word)
     {
         memmove(str, str + wordLen, strlen(str + wordLen) + 1);
     }
+}
+
+void peek_tests()
+{
+    char *ooga = "booga";
+    char *e = &ooga[4];
+    char ee = peek(e, -1);
+    printf("%c", ee);
 }

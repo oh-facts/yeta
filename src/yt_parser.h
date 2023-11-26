@@ -37,6 +37,7 @@ enum token_type
     SEMICOLON,
     VAR_NAME,
     VAR_TYPE,
+    TAG_STRUCT,
     TK_EOF
 };
 
@@ -64,6 +65,7 @@ void print_token_list(const YK_Yektor* token_list);
 
 /*
     Returns character at string index (0 + ahead)
+    use negative index to go backwards.
 */
 char peek(const char *str, int ahead);
 
