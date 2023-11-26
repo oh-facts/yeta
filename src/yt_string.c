@@ -115,22 +115,28 @@ char *cstring_clone(const char *str)
     return out;
 }
 
-char *peek(const char *in)
+
+char *cstring_clean(const char *str)
 {
-    char *out_token;
-    char *context;
-
-    char *in_temp = cstring_clone(in);
-
-    while (isspace(*in_temp))
+    if (str == NULL)
     {
-        in_temp++;
+        return NULL;
     }
 
-    in_temp = strtok_s(in_temp, "}", &context);
-    printf("%s ", in_temp);
-    in_temp = strtok_s(NULL, " ", &context);
-    printf("%s ", in_temp);
+    int len = strlen(str);
+    char *result = cstring_clone(str);
 
-    return in_temp;
+    int i, j = 0;
+
+    for (i = 0; i < len; i++)
+    {
+        if (str[i] != ' ' && str[i] != '\t' && str[i] != '\n' && str[i] != '\r')
+        {
+            result[j++] = str[i];
+        }
+    }
+
+    result[j] = '\0';
+
+    return result;
 }

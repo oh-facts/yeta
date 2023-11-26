@@ -3,14 +3,21 @@
 
 #include "yt_string.h"
 #include "yt_vector.h"
+#include <stdint.h>
+
+#define true 1
+#define false 0
+
+typedef int8_t bool;
 
 typedef struct Chunks Chunks;
 typedef struct struct_template struct_template;
+typedef struct scanner scanner;
+typedef struct token token;
 
 struct Chunks
 {
     YK_Yektor struct_templates;
- 
 };
 
 struct struct_template
@@ -19,6 +26,50 @@ struct struct_template
     YK_Yektor variable_names;
     YK_Yektor variable_types;
 };
+
+enum token_type
+{
+    NO_TYPE,
+    LEFT_PAREN,
+    RIGHT_PAREN,
+    LEFT_BRACE,
+    RIGHT_BRACE,
+    SEMICOLON,
+    VAR_NAME,
+    VAR_TYPE,
+    TK_EOF
+};
+
+typedef enum token_type token_type;
+
+struct token
+{
+    token_type type;
+    const char *lexeme;
+};
+
+struct scanner
+{
+    const char *source;
+    YK_Yektor token_list;
+    int start;
+    int current;
+    int line;
+};
+
+void scanner_innit(scanner *scanner, const char *source_file_content);
+void scan_tokens(scanner *scanner);
+token_type get_token_type(const char *str);
+void print_token_list(const YK_Yektor* token_list);
+
+/*
+    Returns character at string index (0 + ahead)
+*/
+char peek(const char *str, int ahead);
+
+void advance(scanner *scanner);
+
+bool is_at_end(scanner *scanner);
 
 /*
     Breaks the meta file content into separate chunks.
