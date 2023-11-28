@@ -38,6 +38,8 @@ enum token_type
     VAR_NAME,
     VAR_TYPE,
     TAG_STRUCT,
+    WHITE_SPACE,
+    STRUCT_NAME,
     TK_EOF
 };
 
@@ -60,16 +62,18 @@ struct scanner
 
 void scanner_innit(scanner *scanner, const char *source_file_content);
 void scan_tokens(scanner *scanner);
-token_type get_token_type(const char *str);
+token make_token(scanner *scanner);
+token get_token_start(scanner *scanner, int index);
+token get_token_end(scanner *scanner, int index);
 void print_token_list(const YK_Yektor* token_list);
-
+void print_token(token token);
 /*
     Returns character at string index (0 + ahead)
     use negative index to go backwards.
 */
-char peek(const char *str, int ahead);
+char peek(scanner* scanner, int ahead);
 
-void advance(scanner *scanner);
+void advance(scanner *scanner,int step);
 
 bool is_at_end(scanner *scanner);
 

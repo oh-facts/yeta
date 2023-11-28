@@ -16,3 +16,25 @@ void init_array<T>(array<T> *array, int max_size)
     array->size = 0;
     array->max_size = max_size;
 }
+
+@struct
+array <T,A> [int, float] [int, int]
+{
+    T tets;
+    A axe;
+    int num;
+
+    @struct
+    peep <O,B> [int, char]
+    {
+        O* oop_list;
+        B* boop_list;
+    }
+}
+
+/*
+comments like this.
+variables can be use in @generate blocks as `var a` and `a`
+Rest of the code that needs to be copied over as-is can be done
+with #
+*/

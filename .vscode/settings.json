@@ -1,6 +1,7 @@
 {
     "files.associations": {
         "string.h": "c",
-        "xlocale": "c"
+        "xlocale": "c",
+        "istream": "c"
     }
 }

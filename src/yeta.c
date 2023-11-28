@@ -6,6 +6,7 @@ void yt_remove_word(char *str, const char *word);
 YT_String meta_data;
 
 void peek_tests();
+void get_last_token_test();
 
 int main()
 {
@@ -22,13 +23,15 @@ int main()
 
     yt_file_clean(cd.out_path);
 
-    //  Chunks chunks;
+    // Chunks chunks;
     //  break_into_chunks(&meta_data, &chunks);
 
     scanner sc;
     scanner_innit(&sc, meta_data.data);
     scan_tokens(&sc);
 
+    // peek_tests();
+    //get_last_token_test();
     return 0;
 }
 
@@ -44,8 +47,19 @@ void yt_remove_word(char *str, const char *word)
 
 void peek_tests()
 {
-    char *ooga = "booga";
-    char *e = &ooga[4];
-    char ee = peek(e, -1);
+    scanner sc;
+    scanner_innit(&sc, "hello hi i am a 2019 guy");
+    advance(&sc, 1);
+    char ee = peek(&sc, 1);
     printf("%c", ee);
+}
+
+void get_last_token_test()
+{
+    scanner sc;
+    scanner_innit(&sc, "@struct {}");
+    scan_tokens(&sc);
+
+    token tk = get_token_end(&sc,0);
+    print_token(tk);
 }

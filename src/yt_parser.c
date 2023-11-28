@@ -7,228 +7,6 @@
 // that returns next token
 // and read file like that
 
-void break_into_chunks(YT_String *meta_file_content, Chunks *chunks)
-{
-
-    {
-        yk_yektor_innit(&chunks->struct_templates, 1, sizeof(struct_template));
-
-        struct_template st;
-        yk_yektor_innit(&st.variable_names, 1, sizeof(YT_String));
-        yk_yektor_innit(&st.variable_types, 1, sizeof(YT_String));
-
-        YT_String string;
-        yt_string_innit(&string, "fe");
-        st.struct_name = string;
-        yt_string_innit(&st.struct_name, "default_struct");
-
-        yk_yektor_push(&chunks->struct_templates, &st);
-    }
-
-    {
-        YT_String data = yt_string_clone(meta_file_content);
-        char *context;
-        // upto @
-        char *result = strtok_s(data.data, "@", &context);
-
-        // catch tag_type
-        result = strtok_s(NULL, "\n", &context);
-        // printf("%s ", result);
-        if (strcmp(result, "struct") == 0)
-        {
-
-            result = strtok_s(NULL, "\n", &context);
-            // printf("%s ", result);
-
-            struct_template *st_handle = yk_yektor_get(&chunks->struct_templates, 0);
-            YK_Yektor *st_var_names_handle = &st_handle->variable_names;
-            YK_Yektor *st_var_types_handle = &st_handle->variable_types;
-
-            YT_String *name_handle = &st_handle->struct_name;
-            yt_string_set(name_handle, result);
-
-            // bracket open
-            result = strtok_s(NULL, " ", &context);
-            int count = 0;
-
-            while (1)
-            {
-                // var type
-                result = strtok_s(NULL, " ", &context);
-                if (!result)
-                {
-                    break;
-                }
-
-                {
-
-                    char *result_c = cstring_clean(result);
-
-                    // printf("%s", result);
-                    if (strcmp(result_c, "};") == 0)
-                    {
-                        break;
-                    }
-                    if (strcmp(result_c, "") == 0)
-                    {
-                        break;
-                    }
-
-                    YT_String var_type;
-                    yt_string_innit(&var_type, result_c);
-                    yk_yektor_push(st_var_types_handle, &var_type);
-                    free(result_c);
-                }
-
-                // var name
-                result = strtok_s(NULL, "\n", &context);
-                if (!result)
-                {
-                    break;
-                }
-
-                {
-
-                    char *result_c = cstring_clean(result);
-                    if (strcmp(result_c, "};") == 0)
-                    {
-                        break;
-                    }
-                    if (strcmp(result_c, "") == 0)
-                    {
-                        break;
-                    }
-                    YT_String var_name;
-                    yt_string_innit(&var_name, result_c);
-                    yk_yektor_push(st_var_names_handle, &var_name);
-                    free(result_c);
-                }
-                count++;
-            }
-        }
-        yt_string_free(&data);
-    }
-
-    {
-        YT_String data = yt_string_clone(meta_file_content);
-
-        char *context;
-
-        // upto @
-        char *result = strtok_s(data.data, "@", &context);
-        result = strtok_s(NULL, "@", &context);
-        result = strtok_s(NULL, "@", &context);
-        result = strtok_s(NULL, "\n", &context);
-        printf("%s", result);
-        // printf("%s ", result);
-        if (strcmp(result, "struct") == 0)
-        {
-
-            result = strtok_s(NULL, "\n", &context);
-            //    printf("%s ", result);
-
-            struct_template *st_handle = yk_yektor_get(&chunks->struct_templates, 1);
-            YK_Yektor *st_var_names_handle = &st_handle->variable_names;
-            YK_Yektor *st_var_types_handle = &st_handle->variable_types;
-
-            YT_String *name_handle = &st_handle->struct_name;
-            yt_string_set(name_handle, result);
-
-            // bracket open
-            result = strtok_s(NULL, " ", &context);
-            int count = 0;
-
-            while (1)
-            {
-                // var type
-                result = strtok_s(NULL, " ", &context);
-                if (!result)
-                {
-                    break;
-                }
-
-                {
-
-                    char *result_c = cstring_clean(result);
-
-                    // printf("%s", result);
-                    if (strcmp(result_c, "};") == 0)
-                    {
-                        break;
-                    }
-                    if (strcmp(result_c, "") == 0)
-                    {
-                        break;
-                    }
-
-                    YT_String var_type;
-                    yt_string_innit(&var_type, result_c);
-                    yk_yektor_push(st_var_types_handle, &var_type);
-                    free(result_c);
-                }
-
-                // var name
-                result = strtok_s(NULL, "\n", &context);
-                if (!result)
-                {
-                    break;
-                }
-
-                {
-
-                    char *result_c = cstring_clean(result);
-                    if (strcmp(result_c, "};") == 0)
-                    {
-                        break;
-                    }
-                    if (strcmp(result_c, "") == 0)
-                    {
-                        break;
-                    }
-                    YT_String var_name;
-                    yt_string_innit(&var_name, result_c);
-                    yk_yektor_push(st_var_names_handle, &var_name);
-                    free(result_c);
-                }
-                count++;
-            }
-        }
-        yt_string_free(&data);
-    }
-
-    print_chunks(chunks);
-}
-
-void print_chunks(const Chunks *chunks)
-{
-
-    int num = chunks->struct_templates.size;
-
-    for (int i = 0; i < num; i++)
-    {
-
-        struct_template *st_handle = yk_yektor_get(&chunks->struct_templates, i);
-        YT_String *name_handle = &st_handle->struct_name;
-        printf("chunk tag name: %s\n", name_handle->data);
-
-        YK_Yektor *st_var_names_handle = &st_handle->variable_names;
-        YK_Yektor *st_var_types_handle = &st_handle->variable_types;
-
-        int num2 = st_var_names_handle->size;
-
-        for (int j = 0; j < num2; j++)
-        {
-            YT_String *type_handle = yk_yektor_get(st_var_types_handle, j);
-            printf("var type %d: %s\n", j, type_handle->data);
-
-            YT_String *name_handle = yk_yektor_get(st_var_names_handle, j);
-            printf("var name %d: %s\n", j, name_handle->data);
-        }
-
-        printf("------\n");
-    }
-}
-
 void scanner_innit(scanner *scanner, const char *source_file_content)
 {
     scanner->source = source_file_content;
@@ -242,25 +20,29 @@ void scan_tokens(scanner *scanner)
 {
     while (!is_at_end(scanner))
     {
-        const char *current_char = &(scanner->source[scanner->current]);
-        // printf("%c", current_char);
-        // printf("%d", get_token_type(&current_char));
+        // store lexemes.
+        // make a hashmap.
+        // store keywords
+        // store identifiers
 
-        // advance whole tokens, skipping whitespace
-        if (*current_char == '\n' || *current_char == ' ')
+        token tk = make_token(scanner);
+        if (tk.type == WHITE_SPACE)
         {
-            scanner->current++;
+            advance(scanner, 1);
             continue;
         }
 
-        token_type tk = get_token_type(current_char);
         yk_yektor_push(&scanner->token_list, &tk);
 
-        scanner->current++;
-        advance(scanner);
+        advance(scanner, 1);
     }
 
     print_token_list(&scanner->token_list);
+}
+
+void print_token(token token)
+{
+    printf("%s %d \n", token.lexeme, token.type);
 }
 
 void print_token_list(const YK_Yektor *token_list)
@@ -268,49 +50,78 @@ void print_token_list(const YK_Yektor *token_list)
     int size = token_list->size;
     for (int i = 0; i < size; i++)
     {
-        token_type tk = *((token_type *)yk_yektor_get(token_list, i));
-        printf("%d", tk);
+        token tk = *((token *)yk_yektor_get(token_list, i));
+        print_token(tk);
     }
 }
 
-char peek(const char *str, int ahead)
+char peek(scanner *scanner, int ahead)
 {
-    return *(str + ahead);
+    return *(&scanner->source[scanner->current] + ahead);
 }
 
 void peek_next(scanner *scanner)
 {
 }
 
-void advance(scanner *scanner)
+void advance(scanner *scanner, int step)
 {
+    scanner->current += step;
 }
 
-token_type get_token_type(const char *str)
+token make_token(scanner *scanner)
 {
-    token_type out = NO_TYPE;
-    switch (*str)
+    token out;
+    out.type = -1;
+    out.lexeme = "INVALID_TYPE";
+
+    const char *current_char = &(scanner->source[scanner->current]);
+
+    // printf("%c", *current_char);
+    switch (*current_char)
     {
     case '(':
-        out = LEFT_PAREN;
+        out.lexeme = "(";
+        out.type = LEFT_PAREN;
         break;
     case ')':
-        out = RIGHT_PAREN;
+        out.lexeme = ")";
+        out.type = RIGHT_PAREN;
         break;
     case '{':
-        out = LEFT_BRACE;
+        out.lexeme = "{";
+        out.type = LEFT_BRACE;
         break;
     case '}':
-        out = RIGHT_BRACE;
+        out.lexeme = "}";
+        out.type = RIGHT_BRACE;
         break;
     case ';':
-        out = SEMICOLON;
+        out.type = SEMICOLON;
+        break;
+    case '/':
+        if (peek(scanner, 1) == '*')
+        {
+            out.type = WHITE_SPACE;
+            advance(scanner, 2);
+            // printf("comment starts");
+            while (peek(scanner, 1) != '*' && peek(scanner, 2) != '/')
+            {
+                // printf("%c", peek(scanner, 0));
+                advance(scanner, 1);
+            }
+
+            advance(scanner, 2);
+            // printf("comment ends");
+        }
         break;
     case '@':
 
-        if (peek(str, 1) == 's')
+        if (peek(scanner, 1) == 's')
         {
-            out = TAG_STRUCT;
+            out.lexeme = "struct";
+            out.type = TAG_STRUCT;
+            advance(scanner, strlen(out.lexeme));
         }
 
         break;
@@ -318,15 +129,51 @@ token_type get_token_type(const char *str)
         fall through cases
     */
     case ' ':
-        printf("uncaught whitespace");
     case '\n':
-        printf("uncaught line break");
+        out.lexeme = "WHITE_SPACE";
+        out.type = WHITE_SPACE;
         break;
 
     default:
+        if (isalpha(*current_char) && get_token_end(scanner, 0).type == TAG_STRUCT)
+        {
+
+            int i = 0;
+            char *eep = malloc(sizeof(char) * 20);
+            while (isalnum(peek(scanner, 0)) || peek(scanner, 0) == '_')
+            {
+                // printf("%c", peek(scanner, 0));
+                eep[i] = peek(scanner, 0);
+                advance(scanner, 1);
+                i++;
+            }
+            eep = realloc(eep, (i + 1) * sizeof(char));
+            eep[i] = '\0';
+
+            // printf("%d", i);
+
+            out.lexeme = eep;
+            out.type = STRUCT_NAME;
+            //  advance(scanner, i-1);
+            break;
+        }
+        out.lexeme = current_char;
+        out.type = NO_TYPE;
+        // printf("%c", *current_char);
         break;
     }
+
     return out;
+}
+
+token get_token_start(scanner *scanner, int index)
+{
+    return *(token *)(yk_yektor_get(&scanner->token_list, index));
+}
+
+token get_token_end(scanner *scanner, int index)
+{
+    return *(token *)(yk_yektor_get(&scanner->token_list, scanner->token_list.size - index - 1));
 }
 
 bool is_at_end(scanner *scanner)
