@@ -7,6 +7,7 @@ YT_String meta_data;
 
 void peek_tests();
 void get_last_token_test();
+void peek_word_tests();
 
 int main()
 {
@@ -23,15 +24,13 @@ int main()
 
     yt_file_clean(cd.out_path);
 
-    // Chunks chunks;
-    //  break_into_chunks(&meta_data, &chunks);
-
     scanner sc;
     scanner_innit(&sc, meta_data.data);
     scan_tokens(&sc);
 
     // peek_tests();
-    //get_last_token_test();
+    // get_last_token_test();
+    // peek_word_tests();
     return 0;
 }
 
@@ -57,9 +56,31 @@ void peek_tests()
 void get_last_token_test()
 {
     scanner sc;
-    scanner_innit(&sc, "@struct {}");
+    scanner_innit(&sc, "@types {}");
     scan_tokens(&sc);
 
-    token tk = get_token_end(&sc,0);
+    token tk = get_token_end(&sc, 0);
     print_token(tk);
+}
+
+void peek_word_tests()
+{
+    scanner sc;
+    scanner_innit(&sc, "pep pee pop poo");
+
+    char *tk = peek_word(&sc);
+    printf("%s", tk);
+
+    advance(&sc, strlen(tk) + 1);
+    free(tk);
+    tk = peek_word(&sc);
+    printf("%s", tk);
+
+    advance(&sc, strlen(tk) + 1);
+    free(tk);
+    tk = peek_word(&sc);
+    printf("%s", tk);
+
+
+    free(tk);
 }

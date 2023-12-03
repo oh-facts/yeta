@@ -26,6 +26,8 @@ void scan_tokens(scanner *scanner)
         // store identifiers
 
         token tk = make_token(scanner);
+
+        // skip whitespace
         if (tk.type == WHITE_SPACE)
         {
             advance(scanner, 1);
@@ -42,7 +44,9 @@ void scan_tokens(scanner *scanner)
 
 void print_token(token token)
 {
-    printf("%s %d \n", token.lexeme, token.type);
+    print_token_type(token.type);
+    printf(": %s ", token.lexeme);
+    printf("\n");
 }
 
 void print_token_list(const YK_Yektor *token_list)
@@ -58,6 +62,22 @@ void print_token_list(const YK_Yektor *token_list)
 char peek(scanner *scanner, int ahead)
 {
     return *(&scanner->source[scanner->current] + ahead);
+}
+
+char *peek_word(scanner *scanner)
+{
+    int i = 0;
+    char *eep = malloc(sizeof(char) * 20);
+    while (peek(scanner, i) != ' ' && peek(scanner, i) != '\n' && peek(scanner, i) != ',')
+    {
+        // printf("%c", peek(scanner, 0));
+        eep[i] = peek(scanner, i);
+        i++;
+    }
+    eep = realloc(eep, (i + 1) * sizeof(char));
+    eep[i] = '\0';
+
+    return eep;
 }
 
 void peek_next(scanner *scanner)
@@ -96,8 +116,9 @@ token make_token(scanner *scanner)
         out.lexeme = "}";
         out.type = RIGHT_BRACE;
         break;
-    case ';':
-        out.type = SEMICOLON;
+    case ':':
+        out.lexeme = ":";
+        out.type = COLON;
         break;
     case '/':
         if (peek(scanner, 1) == '*')
@@ -117,14 +138,37 @@ token make_token(scanner *scanner)
         break;
     case '@':
 
-        if (peek(scanner, 1) == 's')
+        /*
+            check for struct instead of stopping at s.
+            Alternatively, make a function that peeks the next "word", i.e,
+            peeks until it finds whitespace
+        */
+        if (peek(scanner, 1) == 't')
         {
-            out.lexeme = "struct";
-            out.type = TAG_STRUCT;
+            out.lexeme = "@types";
+            out.type = TAG_TYPES;
             advance(scanner, strlen(out.lexeme));
+            break;
+        }
+
+        else if (peek(scanner, 1) == 'g')
+        {
+            out.lexeme = "@gen";
+            out.type = TAG_GEN;
+            advance(scanner, strlen(out.lexeme));
+            break;
         }
 
         break;
+    case '$':
+        out.lexeme = "$";
+        out.type = DOLLAR;
+        break;
+    case '`':
+        out.lexeme = "`";
+        out.type = BACK_TICK;
+        break;
+
     /*
         fall through cases
     */
@@ -135,7 +179,7 @@ token make_token(scanner *scanner)
         break;
 
     default:
-        if (isalpha(*current_char) && get_token_end(scanner, 0).type == TAG_STRUCT)
+        if (isalpha(*current_char) && get_token_end(scanner, 0).type == TAG_TYPES)
         {
 
             int i = 0;
@@ -153,8 +197,25 @@ token make_token(scanner *scanner)
             // printf("%d", i);
 
             out.lexeme = eep;
-            out.type = STRUCT_NAME;
+            out.type = IDENTIFIER;
             //  advance(scanner, i-1);
+            break;
+        }
+
+        if (isalpha(*current_char) && get_token_end(scanner, 0).type == DOLLAR)
+        {
+            out.lexeme = peek_word(scanner);
+
+            out.type = L_TYPES;
+            advance(scanner, strlen(out.lexeme));
+            break;
+        }
+
+        if (isalpha(*current_char) && (get_token_end(scanner, 0).type == COLON || get_token_end(scanner, 0).type == R_TYPES))
+        {
+            out.lexeme = peek_word(scanner);
+            out.type = R_TYPES;
+            advance(scanner, strlen(out.lexeme));
             break;
         }
         out.lexeme = current_char;
@@ -179,4 +240,62 @@ token get_token_end(scanner *scanner, int index)
 bool is_at_end(scanner *scanner)
 {
     return scanner->current >= strlen(scanner->source);
+}
+
+void print_token_type(token_type tt)
+{
+    const char *tt_string;
+    switch (tt)
+    {
+    case LEFT_BRACE:
+        tt_string = "Left Brace";
+        break;
+    case RIGHT_BRACE:
+        tt_string = "Right Brace";
+        break;
+    case LEFT_PAREN:
+        tt_string = "Left Parenthesis";
+        break;
+    case RIGHT_PAREN:
+        tt_string = "Right Parenthesis";
+        break;
+    case WHITE_SPACE:
+        tt_string = "White Space";
+        break;
+    case TAG_TYPES:
+        tt_string = "Types Tag";
+        break;
+    case TAG_GEN:
+        tt_string = "Tag - Generate";
+        break;
+    case IDENTIFIER:
+        tt_string = "Identifier";
+        break;
+    case DOLLAR:
+        tt_string = "Dollar Sign";
+        break;
+    case L_TYPES:
+        tt_string = "L Types";
+        break;
+    case COLON:
+        tt_string = "Colon";
+        break;
+    case R_TYPES:
+        tt_string = "R Types";
+        break;
+    case BACK_TICK:
+        tt_string = "Back Tick";
+        break;
+    case STRING:
+        tt_string = "String";
+        break;
+    case TK_EOF:
+        tt_string = "End of File";
+        break;
+    default:
+        tt_string = "Unknown Token Type";
+        break;
+    }
+
+    printf("%-15s", tt_string);
 }

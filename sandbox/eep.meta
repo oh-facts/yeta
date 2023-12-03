@@ -38,3 +38,182 @@ variables can be use in @generate blocks as `var a` and `a`
 Rest of the code that needs to be copied over as-is can be done
 with #
 */
+
+I am thinking that all types should be T or A or Monkey(or whatever). No need to use int, float as token types.
+You can define what each type means separately
+
+I am considering that every data type is a struct. Every struct might have more structs. 
+
+This sounds likes nodes.
+
+Please send nodes
+
+
+Anyways, picture this
+
+
+@struct
+House
+{
+    Num  rooms;
+    Size size;
+    Num  People;
+    Owner owner;
+}
+
+@types
+House
+{
+    Num: int;
+    Size: float, double;
+    /*
+        owner is a user defined type
+        inside owner.h, which is included at the top.
+    */
+    Owner: Owner;
+}
+
+
+@struct
+vector
+{
+    Data data;
+    Num size;
+    Num capacity;
+}
+
+@types
+vector
+{
+    Data: int, float, Owner;
+    Num: int;
+}
+
+@gen
+Type vector_push(vector* vector, Data data)
+{
+    void *dest = (char *)vector->data + (vector->size * vector->element_size);
+
+    vector->size++;
+    memcpy(dest, element, vector->element_size);
+    
+    return dest;
+}
+
+
+void *yk_yektor_push(YK_Yektor *vector, void *element)
+{
+    if (vector->size >= vector->capacity)
+    {
+        yk_yektor_resize(vector);
+    }
+
+    void *dest = (char *)vector->data + (vector->size * vector->element_size);
+
+    vector->size++;
+    memcpy(dest, element, vector->element_size);
+    
+    return dest;
+}
+
+---------------------
+
+I have been reading ryan fleury's code gen tool.
+I will make an easy to use vector function, then
+try to parse it.
+
+@types
+vector
+{
+    data;
+    size;
+    capacity;
+}
+
+@gen_func
+`vector_push`(`vector`)
+
+@gen
+Type vector_push(vector* vector, Data data)
+{
+    void *dest = (char *)vector->data + (vector->size * vector->element_size);
+
+    vector->size++;
+    memcpy(dest, element, vector->element_size);
+    
+    return dest;
+}
+
+
+########################
+
+
+I think I really like this grammar
+
+@types
+Gen
+{
+    $T: int, float, bool
+}
+
+@gen
+{
+    `typedef vector_$T{`
+    `$T data;`
+    `int  size;`
+    `int  capacity;};`
+}
+
+@gen
+{
+    `void vector_$T_push(vector_$T *vector, $T element)`
+    `{`
+        `vector->data[vector->size++] = element;`
+    `}`
+}
+
+@type
+enum_types
+{
+    $A : A, B, C
+}
+
+@gen
+{
+    `typedef enum MyEnum`
+    `{`
+    `$(enum_types),`
+    `}MyEnum;`
+}
+
+@gen
+{
+    `char *myenum_string_table[3] =`
+    `{`
+        `"MyEnum_$(enum_types);"`
+        `"MyEnum_COUNT";`
+    `}`
+}
+
+------
+typedef enum MyEnum
+{
+  MyEnum_A,
+  MyEnum_B,
+  MyEnum_C,
+  MyEnum_COUNT
+}
+MyEnum;
+
+extern char *myenum_string_table[3];
+
+// --- c file -----------------------------------
+
+char *myenum_string_table[3] =
+{
+  "A",
+  "B",
+  "C",
+};
+
+Tokens:

@@ -30,20 +30,26 @@ struct struct_template
 enum token_type
 {
     NO_TYPE,
-    LEFT_PAREN,
-    RIGHT_PAREN,
+    IDENTIFIER,
     LEFT_BRACE,
     RIGHT_BRACE,
-    SEMICOLON,
-    VAR_NAME,
-    VAR_TYPE,
-    TAG_STRUCT,
+    LEFT_PAREN,
+    RIGHT_PAREN,
     WHITE_SPACE,
-    STRUCT_NAME,
+    TAG_TYPES,
+    TAG_GEN,
+    DOLLAR,
+    L_TYPES,
+    COLON,
+    R_TYPES,
+    BACK_TICK,
+    STRING,
     TK_EOF
 };
 
 typedef enum token_type token_type;
+
+void print_token_type(token_type tt);
 
 struct token
 {
@@ -72,6 +78,8 @@ void print_token(token token);
     use negative index to go backwards.
 */
 char peek(scanner* scanner, int ahead);
+
+char* peek_word(scanner* scanner);
 
 void advance(scanner *scanner,int step);
 
