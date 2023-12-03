@@ -1,5 +1,5 @@
-#ifndef YT_PARSER_H
-#define YT_PARSER_H
+#ifndef YT_LEXER_H
+#define YT_LEXER_H
 
 #include "yt_string.h"
 #include "yt_vector.h"
@@ -39,9 +39,7 @@ enum token_type
     TAG_TYPES,
     TAG_GEN,
     DOLLAR,
-    L_TYPES,
     COLON,
-    R_TYPES,
     BACK_TICK,
     STRING,
     TK_EOF

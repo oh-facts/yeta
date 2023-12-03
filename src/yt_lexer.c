@@ -1,4 +1,4 @@
-#include "yt_parser.h"
+#include "yt_lexer.h"
 #include <ctype.h>
 // https://craftinginterpreters.com/introduction.html
 
@@ -179,45 +179,16 @@ token make_token(scanner *scanner)
         break;
 
     default:
-        if (isalpha(*current_char) && get_token_end(scanner, 0).type == TAG_TYPES)
+        if (isalpha(*current_char))
         {
-
-            int i = 0;
-            char *eep = malloc(sizeof(char) * 20);
-            while (isalnum(peek(scanner, 0)) || peek(scanner, 0) == '_')
-            {
-                // printf("%c", peek(scanner, 0));
-                eep[i] = peek(scanner, 0);
-                advance(scanner, 1);
-                i++;
-            }
-            eep = realloc(eep, (i + 1) * sizeof(char));
-            eep[i] = '\0';
-
-            // printf("%d", i);
-
+            char *eep = peek_word(scanner);
+            advance(scanner, strlen(eep));
             out.lexeme = eep;
             out.type = IDENTIFIER;
             //  advance(scanner, i-1);
             break;
         }
 
-        if (isalpha(*current_char) && get_token_end(scanner, 0).type == DOLLAR)
-        {
-            out.lexeme = peek_word(scanner);
-
-            out.type = L_TYPES;
-            advance(scanner, strlen(out.lexeme));
-            break;
-        }
-
-        if (isalpha(*current_char) && (get_token_end(scanner, 0).type == COLON || get_token_end(scanner, 0).type == R_TYPES))
-        {
-            out.lexeme = peek_word(scanner);
-            out.type = R_TYPES;
-            advance(scanner, strlen(out.lexeme));
-            break;
-        }
         out.lexeme = current_char;
         out.type = NO_TYPE;
         // printf("%c", *current_char);
@@ -274,14 +245,8 @@ void print_token_type(token_type tt)
     case DOLLAR:
         tt_string = "Dollar Sign";
         break;
-    case L_TYPES:
-        tt_string = "L Types";
-        break;
     case COLON:
         tt_string = "Colon";
-        break;
-    case R_TYPES:
-        tt_string = "R Types";
         break;
     case BACK_TICK:
         tt_string = "Back Tick";
