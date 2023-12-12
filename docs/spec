@@ -1,0 +1,37 @@
+
+## Tokens:
+
+- NO_TYPE,
+- IDENTIFIER,
+- LEFT_BRACE,   
+- RIGHT_BRACE,
+- LEFT_PAREN,
+- RIGHT_PAREN,
+- WHITE_SPACE,
+- TAG_TYPES,
+- TAG_GEN,
+- DOLLAR,
+- COLON,
+- BACK_TICK,
+- STRING,
+- TK_EOF
+
+  
+
+*NO_TYPE, WHITE_SPACE need to be removed. They don't make sense.
+
+*TAG_TYPES needs to be renamed to TAG_TABLE to avoid confusion
+
+  
+
+There are two Tags currently, @gen and @types. @types is a list of types and @gen tells the parser to generate code based on data from @types and other statements.
+
+  
+
+## Grammar
+
+program  : type_tag | gen_tag
+
+type_tag : "@type" IDENTIFIER "{" types* "}" ";"
+
+types    : "$" IDENTIFIER ":" IDENTIFIER "," IDENTIFIER * ";"
