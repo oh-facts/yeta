@@ -1,7 +1,7 @@
 
 Trying to metaprogram in C
 
-Basically uses a transpiler  to convert "meta" code to C. 
+Basically uses a parser to convert "meta" code to C. Allows C program to make use of ASTs produced by meta code.
 
 
 -----
