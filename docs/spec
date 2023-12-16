@@ -30,8 +30,8 @@ There are two Tags currently, @gen and @types. @types is a list of types and @ge
 
 ## Grammar
 
-program  : type_tag | gen_tag
+program  : table | gen
 
-type_tag : "@type" IDENTIFIER "{" types* "}" ";"
+table : "@table" IDENTIFIER "{" types* "}" ";"
 
 types    : "$" IDENTIFIER ":" IDENTIFIER "," IDENTIFIER * ";"

@@ -38,7 +38,9 @@ void scan_tokens(scanner *scanner)
 
         advance(scanner, 1);
     }
+    token tk_temp = {.lexeme = "EoF", .type = TK_EOF};
 
+    yk_yektor_push(&scanner->token_list, &tk_temp);
     print_token_list(&scanner->token_list);
 }
 

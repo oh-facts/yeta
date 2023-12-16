@@ -1,5 +1,6 @@
 #include "yeta.h"
 #include "yt_string.h"
+#include "yt_parser.h"
 
 void yt_remove_word(char *str, const char *word);
 
@@ -27,6 +28,8 @@ int main()
     scanner sc;
     scanner_innit(&sc, meta_data.data);
     scan_tokens(&sc);
+    yt_parse(&sc.token_list);
+    
 
     // peek_tests();
     // get_last_token_test();
